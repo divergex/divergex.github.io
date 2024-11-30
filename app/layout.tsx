@@ -32,7 +32,7 @@ export default function RootLayout({
         <header className="bg-black z-50 w-full fixed top-0 left-0 ">
             <DxHeader/>
         </header>
-        <main className="flex flex-grow pt-[80px] min-h-[calc(100vh-256px)]">
+        <main className="flex flex-grow pt-[72px] md:pt-[80px] min-h-[calc(100vh-256px)]">
             {children}
         </main>
         <footer className="bg-black py-8">

@@ -10,14 +10,14 @@ export default function AboutPage() {
                 <h1 className="text-4xl font-bold mb-6">
                     Welcome to Divergex
                 </h1>
-                <div className={"my-10 mx-auto flex justify-center"}>
-                    <p className="w-1/3 text-lg mb-8 ">
+                <div className={"my-10 mx-auto flex flex-col md:flex-row justify-center md:space-x-10"}>
+                    <p className="w-full md:w-1/3 text-lg mb-8 ">
                         Divergex is a FOSS initiative for quantitative and algorithmic trading.
                         We provide a platform for developers to build and deploy trading algorithms.
                         Our platform is built on top of the DX Framework,
                         which is a collection of libraries and tools for quantitative trading.
                     </p>
-                    <p className="w-1/3 text-lg mb-8">
+                    <p className="w-full md:w-1/3 text-lg mb-8">
                         We also provide a marketplace for developers to sell their trading algorithms.
                         Our goal is to democratize algorithmic trading and make it accessible to everyone.
                     </p>

@@ -1,8 +1,11 @@
 import {Button} from "@/components/ui/button";
-import {ArrowRight, Cpu, Database} from "lucide-react";
+import {ArrowRight, Cpu, LibraryIcon} from "lucide-react";
 import React, {useState} from "react";
 import CryptoHelper from "@/app/encrypt/helper";
 import CodeCard from "@/app/code-card";
+import {darcula} from "react-syntax-highlighter/dist/esm/styles/prism";
+import Image from 'next/image';
+
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +31,7 @@ export default function Home() {
     return (
         <div className={"flex flex-col flex-grow"}>
             <section className="bg-gradient-to-b from-black via-gray-800 to-black py-20 text-white">
-                <div className="container mx-auto px-4 text-center">
+                <div className="w-full mx-auto px-4 text-center">
                     <h2 className="text-4xl font-extrabold mb-4">Empower Your Quantitative Trading</h2>
                     <p className="text-xl mb-8">
                         High-performance libraries and frameworks for quant traders, funds, and low latency
@@ -64,10 +67,11 @@ export default function Home() {
             </section>
 
             <section className="py-20 bg-gradient-to-b from-black to-gray-900" id="projects">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto">
                     <h3 className="text-3xl font-bold text-white text-center mb-12">Our Core Frameworks</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="flex flex-wrap w-full justify-center">
                         <CodeCard
+                            className="mx-3 my-6 w-auto md:w-2/5"
                             icon={<Cpu className="w-10 h-10 text-indigo-600"/>}
                             title="dxcore"
                             description="Core library with CUDA code, OpenMP/I and high frequency trading market making, signal, risk and portfolio strategies, in C++."
@@ -84,7 +88,8 @@ __global__ void highFrequencyStrategy(MarketData* data) {
                             language="cpp"
                         />
                         <CodeCard
-                            icon={<Database className="w-10 h-10 text-purple-600"/>}
+                            className="mx-3 my-6 w-auto md:w-2/5"
+                            icon={<LibraryIcon className="w-10 h-10 text-purple-600"/>}
                             link="/dxlib"
                             title="dxlib"
                             description="High-level functionalities, interface for Python for dxcore with methods for manipulating data, networking, storage, caching and ML."
@@ -103,7 +108,8 @@ predictions = model.predict(new_data)`}
                             language="python"
                         />
                         <CodeCard
-                            icon={<Cpu className="w-10 h-10 text-pink-600"/>}
+                            className="mx-3 my-6 w-auto"
+                            icon={<Image src={'/divergex.svg'} className="rounded-full bg-white w-10 h-10 text-pink-600"  alt={'divergex'} width={40} height={40}/>}
                             title="dxstudio"
                             description="Native app for studying contracts, analyzing investment opportunities and strategies with API interfaces for calling studio GUI methods from other applications."
                             codeSnippet={`from dxstudio import Studio
@@ -125,6 +131,7 @@ results = studio.backtest(
 # Display results in GUI
 studio.display_results(results)`}
                             language="python"
+                            style={darcula}
                         />
                     </div>
                 </div>

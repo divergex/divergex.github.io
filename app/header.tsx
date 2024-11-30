@@ -1,22 +1,88 @@
 "use client";
 
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {FaGithub} from 'react-icons/fa';
-import {IconContext} from 'react-icons';
-import {CloseIcon} from "next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon";
+import { FaGithub } from 'react-icons/fa';
+import { IconContext } from 'react-icons';
+import { CloseIcon } from "next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon";
 
-function DxHeader() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+class MenuIcon {
+    isOpen: boolean = false;
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-        if (!isMenuOpen) {
+    toggleMenu = () => {
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) {
             document.body.classList.add('overflow-hidden'); // Disable scrolling
         } else {
             document.body.classList.remove('overflow-hidden'); // Re-enable scrolling
         }
+    };
+
+    select = (callback: (isOpen: boolean) => void, scrollTo?: string) => {
+        document.body.classList.remove('overflow-hidden');
+        this.isOpen = false;
+        callback(this.isOpen);
+        if (scrollTo) {
+            const element = document.querySelector(scrollTo);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
+
+    navItems = (callback: (isOpen: boolean) => void) => (
+        <ul className="w-full mt-2 space-y-10 flex flex-col md:flex-row items-center justify-end md:space-x-4 md:space-y-0">
+            <li className="w-full md:w-fit">
+                <Link
+                    href={"/#projects"}
+                    className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
+                    onClick={() => this.select(callback, '#projects')}
+                >
+                    Projects
+                </Link>
+            </li>
+            <li className="w-full md:w-fit">
+                <Link
+                    href={"/#docs"}
+                    className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
+                    onClick={() => this.select(callback, '#docs')}
+                >
+                    Documentation
+                </Link>
+            </li>
+            <li className="w-full md:w-fit">
+                <Link
+                    href={"/about"}
+                    className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
+                    onClick={() => this.select(callback)}
+                >
+                    About
+                </Link>
+            </li>
+            <li className="w-full md:w-fit">
+                <Link href="https://github.com/divergex/" className="block w-full">
+                    <IconContext.Provider value={{ color: "white", size: "2em" }}>
+                        <FaGithub
+                            className="mx-auto hover:scale-125 transition-transform duration-300 ease-in-out" />
+                    </IconContext.Provider>
+                </Link>
+            </li>
+        </ul>
+    );
+}
+
+const DxHeader = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menu = new MenuIcon();
+
+    // Toggle menu state when clicked
+    const toggleMenu = () => {
+        setIsMenuOpen(prevState => {
+            const newState = !prevState;
+            menu.toggleMenu(); // Handle overflow and menu toggle logic
+            return newState;
+        });
     };
 
     return (
@@ -25,14 +91,14 @@ function DxHeader() {
                 <Link
                     className="flex items-center"
                     href={"/"}>
-                    <Image src={"/divergex.png"} alt="divergex" width={40} height={40}/>
+                    <Image src={"/divergex.png"} alt="divergex" width={40} height={40} />
                     <h1 className="text-2xl ml-2 font-bold bg-gradient-to-r from-white via-gray-400 to-gray-500 bg-clip-text text-transparent">
                         divergex
                     </h1>
                 </Link>
 
                 <button
-                    className="flex lg:hidden text-white focus:outline-none"
+                    className="flex md:hidden text-white focus:outline-none"
                     onClick={toggleMenu}
                 >
                     <svg
@@ -54,69 +120,31 @@ function DxHeader() {
             <nav
                 className={`flex md:hidden w-full md:w-auto absolute top-0 left-0 h-screen bg-black flex-col justify-center md:justify-end transform ${
                     isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-                } transition-transform duration-300 lg:translate-x-0 lg:h-auto lg:flex-row`}
+                } transition-transform duration-300 md:translate-x-0 md:h-auto md:flex-row`}
             >
                 <div className="flex py-5 px-3 w-full justify-end">
                     <button
-                        className="text-white lg:hidden"
+                        className="text-white md:hidden"
                         onClick={toggleMenu}
                     >
-                        <CloseIcon/>
+                        <CloseIcon />
                     </button>
                 </div>
                 <div
-                    className="w-full px-4 flex md:hidden flex-col space-y-6 py-4 items-center lg:flex-row lg:space-x-4 lg:space-y-0">
+                    className="w-full px-4 flex md:hidden flex-col space-y-6 py-4 items-center md:flex-row md:space-x-4 md:space-y-0">
                     <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-gray-400 to-gray-500 bg-clip-text text-transparent">
                         divergex
                     </h1>
-                    <NavItems/>
+                    {menu.navItems(setIsMenuOpen)}
                 </div>
             </nav>
             <nav className={`hidden md:flex w-full justify-end`}>
                 <div className="w-full flex space-x-4">
-                    <NavItems/>
+                    {menu.navItems(setIsMenuOpen)}
                 </div>
             </nav>
         </div>
     );
-}
-
-function NavItems() {
-    return (
-        <ul className="w-full mt-2 space-y-10 flex flex-col md:flex-row items-center justify-end lg:space-x-4 lg:space-y-0">
-            <li className="w-full md:w-fit">
-                <Link
-                    href={"/#projects"}
-                    className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
-                >
-                    Projects
-                </Link>
-            </li>
-            <li className="w-full md:w-fit">
-                <Link
-                    href={"/#docs"}
-                    className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
-                >
-                    Documentation
-                </Link>
-            </li>
-            <li className="w-full md:w-fit">
-                <Link
-                    href={"/about"}
-                    className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
-                >
-                    About
-                </Link>
-            </li>
-            <li className="w-full md:w-fit">
-                <Link href="https://github.com/divergex/" className="block w-full">
-                    <IconContext.Provider value={{color: "white", size: "2em"}}>
-                        <FaGithub className="mx-auto hover:scale-125 transition-transform duration-300 ease-in-out"/>
-                    </IconContext.Provider>
-                </Link>
-            </li>
-        </ul>
-    )
-}
+};
 
 export default DxHeader;
