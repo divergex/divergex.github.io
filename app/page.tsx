@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, Cpu, Database} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {ReactNode} from "react";
 
 export default function HomePage() {
     return (
@@ -120,7 +121,14 @@ studio.display_results(results)
     )
 }
 
-function FrameworkCard({ icon, title, description, codeSnippet }) {
+interface FrameworkCardProps {
+    icon: ReactNode;        // Type for React elements like icons
+    title: string;          // Title is a string
+    description: string;    // Description is a string
+    codeSnippet: string;    // Code snippet is a string
+}
+
+function FrameworkCard({ icon, title, description, codeSnippet }: FrameworkCardProps) {
     return (
         <Card className="overflow-hidden">
             <CardHeader>
@@ -136,6 +144,5 @@ function FrameworkCard({ icon, title, description, codeSnippet }) {
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }
-
