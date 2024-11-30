@@ -1,41 +1,117 @@
+'use client';
+
 import Link from 'next/link'
 import {ArrowRight, Cpu, Database} from 'lucide-react'
+import Image from 'next/image'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
-import {ReactNode} from "react";
+import React, {ReactNode, useState} from "react";
+import CryptoHelper from "@/app/encrypt/helper";
+import {FaGithub} from "react-icons/fa";
+import {IconContext} from "react-icons";
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
+import {darcula} from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 
 export default function HomePage() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [password, setPassword] = useState("");
+
+    const encryptedUrl = "U2FsdGVkX1+rPasqXOY09ykLCGjIAakK+wwWuQ1GRU/eVmxh1uCA3NtyZ5+UMyLQ0Ean8tW5teuXvxkZSNG4Sg==";
+
+    const goTo = CryptoHelper(encryptedUrl);
+
+    const showPasswordModal = () => {
+        setIsModalOpen(true); // Open the custom modal
+    };
+
+    const handleSubmit = () => {
+        if (password) {
+            goTo(password);
+            setIsModalOpen(false); // Close the modal after password is entered
+        } else {
+            alert("Please enter a password");
+        }
+    };
+
     return (
         <div className="flex flex-col min-h-screen">
-            <header className="bg-background border-b">
-                <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold">divergex</h1>
+            <header className="bg-black">
+                <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div className="flex space-x-4">
+                        <Image src="/divergex.png" alt="divergex" width={38} height={37}/>
+                        <h1 className="text-2xl font-bold text-center py-1 bg-gradient-to-r from-white via-gray-400 to-gray-500 bg-clip-text text-transparent">
+                            divergex
+                        </h1>
+                    </div>
                     <nav>
                         <ul className="flex space-x-4">
-                            <li><Link href={"#products"}
-                                      className="text-muted-foreground hover:text-primary">Projects</Link></li>
-                            <li><Link href={"#docs"}
-                                      className="text-muted-foreground hover:text-primary">Documentation</Link></li>
+                            <li>
+                                <Link href={"#products"}
+                                      className="text-muted p-2 rounded hover:text-black hover:bg-white outline-white border border-gray-400">
+                                    Projects
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href={"#docs"}
+                                      className="text-muted p-2 rounded hover:text-black hover:bg-white outline-white border border-gray-400">
+                                    Documentation
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="https://github.com/divergex/">
+                                    <IconContext.Provider value={{color: "white", size: "1.5em"}}>
+                                        <FaGithub
+                                            className="scale-120 hover:scale-125 transition-transform duration-300 ease-in-out"
+                                        />
+                                    </IconContext.Provider>
+
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
                 </div>
             </header>
 
-            <main className="flex-grow" >
-                <section className="bg-gradient-to-br from-gray-600 via-yellow-800 to-black py-20 text-white" id="products">
+            <main className="flex-grow">
+                <section className="bg-gradient-to-b from-gray-600 via-gray-800 to-black py-20 text-white"
+                         id="products">
                     <div className="container mx-auto px-4 text-center">
                         <h2 className="text-4xl font-extrabold mb-4">Empower Your Quantitative Trading</h2>
                         <p className="text-xl mb-8">
                             High-performance libraries and frameworks for quant traders, funds, and low latency
                             application developers
                         </p>
-                        <Button size="lg" variant="secondary">
+                        <Button size="lg" variant="secondary" onClick={showPasswordModal}>
                             Get Started <ArrowRight className="ml-2"/>
                         </Button>
                     </div>
+
+                    {isModalOpen && (
+                        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+                            <div className="bg-white p-6 rounded-md shadow-lg w-80">
+                                <h2 className="text-lg font-bold mb-4 text-black">Enter Password</h2>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="Password"
+                                    className="w-full p-2 border border-gray-300 rounded-md mb-4 text-black"
+                                />
+                                <div className="flex justify-between">
+                                    <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="default" onClick={handleSubmit}>
+                                        Submit
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </section>
 
-                <section className="py-20 bg-gradient-to-r from-gray-100 to-gray-200">
+                <section className="py-20 bg-gradient-to-b from-black to-gray-900">
                     <div className="container mx-auto px-4">
                         <h3 className="text-3xl font-bold text-center mb-12">Our Core Frameworks</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -43,8 +119,7 @@ export default function HomePage() {
                                 icon={<Cpu className="w-10 h-10 text-indigo-600"/>}
                                 title="dxcore"
                                 description="Core library with CUDA code, OpenMP/I and high frequency trading market making, signal, risk and portfolio strategies, in C++."
-                                codeSnippet={`
-#include <dxcore/market_making.h>
+                                codeSnippet={`#include <dxcore/market_making.h>
 #include <dxcore/signal_processing.h>
 
 __global__ void highFrequencyStrategy(MarketData* data) {
@@ -53,16 +128,15 @@ __global__ void highFrequencyStrategy(MarketData* data) {
         float signal = computeSignal(data[tid]);
         updateQuotes(data[tid], signal);
     }
-}
-                `}
+}`}
+                                language="cpp"
                             />
                             <FrameworkCard
                                 icon={<Database className="w-10 h-10 text-purple-600"/>}
                                 link="/dxlib"
                                 title="dxlib"
                                 description="High-level functionalities, interface for Python for dxcore with methods for manipulating data, networking, storage, caching and ML."
-                                codeSnippet={`
-import dxlib as dx
+                                codeSnippet={`import dxlib as dx
 
 # Load and preprocess data
 data = dx.load_market_data('AAPL', '2023-01-01', '2023-06-30')
@@ -73,15 +147,14 @@ model = dx.MLModel('RandomForest')
 model.train(features, target='returns')
 
 # Make predictions
-predictions = model.predict(new_data)
-                `}
+predictions = model.predict(new_data)`}
+                                language="python"
                             />
                             <FrameworkCard
                                 icon={<Cpu className="w-10 h-10 text-pink-600"/>}
                                 title="dxstudio"
                                 description="Native app for studying contracts, analyzing investment opportunities and strategies with API interfaces for calling studio GUI methods from other applications."
-                                codeSnippet={`
-from dxstudio import Studio
+                                codeSnippet={`from dxstudio import Studio
 
 # Initialize dxstudio
 studio = Studio()
@@ -98,26 +171,28 @@ results = studio.backtest(
 )
 
 # Display results in GUI
-studio.display_results(results)
-                `}
+studio.display_results(results)`}
+                                language="python"
                             />
                         </div>
                     </div>
                 </section>
 
-                <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
+                <section className="py-20 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white"
                          id="docs">
                     <div className="container mx-auto px-4 text-center">
                         <h3 className="text-3xl font-bold mb-8">Ready to Elevate Your Trading?</h3>
-                        <Button size="lg" variant="secondary">
-                            See the Get Started <ArrowRight className="ml-2"/>
-                        </Button>
+
+                        <p className="mt-4">Check out our documentation on <a href="https://divergex.github.io/dxlib/"
+                                                                              className="text-blue-500 hover:text-blue-700 underline">dxlib</a> and <a
+                            href="https://divergex.github.io/dxcore/"
+                            className="text-blue-500 hover:text-blue-700 underline">dxcore</a>.</p>
                     </div>
                 </section>
             </main>
 
-            <footer className="bg-background border-t py-8">
-                <div className="container mx-auto px-4 text-center text-muted-foreground">
+            <footer className="bg-black py-8">
+                <div className="container mx-auto px-4 text-center text-muted">
                     <p>&copy; 2025 divergex. All rights reserved.</p>
                 </div>
             </footer>
@@ -130,22 +205,19 @@ interface FrameworkCardProps {
     title: string;          // Title is a string
     description: string;    // Description is a string
     codeSnippet: string;    // Code snippet is a string
+    language: string;       // Language is a string
     link?: string;          // Link is an optional string
 }
 
-function FrameworkCard({icon, title, description, codeSnippet, link}: FrameworkCardProps) {
+function FrameworkCard({
+                           icon, title, description, codeSnippet, language, link
+                       }: FrameworkCardProps) {
     return (
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden bg-black">
             <CardHeader>
-                <div className="mb-4">{icon}</div>
-                <CardTitle>{title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <CardDescription className="mb-4">{description}</CardDescription>
-                <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto">
-          <pre className="text-sm">
-            <code>{codeSnippet}</code>
-          </pre>
+                <div className="flex space-x-4">
+                    <div className="mb-4">{icon}</div>
+                    <CardTitle className="text-center py-3 text-white">{title}</CardTitle>
                 </div>
                 {link && (
                     <div className="mt-4">
@@ -158,7 +230,32 @@ function FrameworkCard({icon, title, description, codeSnippet, link}: FrameworkC
                         </a>
                     </div>
                 )}
+            </CardHeader>
+            <CardContent>
+                <CardDescription className="mb-4">{description}</CardDescription>
+                <CodeSnippet codeSnippet={codeSnippet} language={language}/>
             </CardContent>
         </Card>
     );
 }
+
+interface CodeSnippetProps {
+    codeSnippet: string;
+    language?: string;
+}
+
+const CodeSnippet = ({ codeSnippet, language = 'javascript' }: CodeSnippetProps) => {
+    return (
+        <div className="flex flex-col items-center w-full">
+            <div className="flex items-center space-x-2 bg-gray-900 p-2 rounded-t-lg w-full max-w-3xl">
+                <span className="w-3.5 h-3.5 rounded-full bg-red-500"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-yellow-400"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-green-500"></span>
+            </div>
+            <SyntaxHighlighter language={language} style={darcula}
+                               className="w-full max-w-3xl p-5 rounded-lg !rounded-t-none !mt-0 overflow-x-auto bg-gray-900">
+                {codeSnippet}
+            </SyntaxHighlighter>
+        </div>
+    );
+};
