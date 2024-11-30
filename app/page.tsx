@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { ArrowRight, Cpu, Database} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {ArrowRight, Cpu, Database} from 'lucide-react'
+import {Button} from '@/components/ui/button'
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {ReactNode} from "react";
 
 export default function HomePage() {
@@ -12,23 +12,25 @@ export default function HomePage() {
                     <h1 className="text-2xl font-bold">divergex</h1>
                     <nav>
                         <ul className="flex space-x-4">
-                            <li><Link href="#" className="text-muted-foreground hover:text-primary">Products</Link></li>
-                            <li><Link href="#" className="text-muted-foreground hover:text-primary">Documentation</Link></li>
-                            <li><Link href="#" className="text-muted-foreground hover:text-primary">Pricing</Link></li>
+                            <li><Link href={"#products"}
+                                      className="text-muted-foreground hover:text-primary">Projects</Link></li>
+                            <li><Link href={"#docs"}
+                                      className="text-muted-foreground hover:text-primary">Documentation</Link></li>
                         </ul>
                     </nav>
                 </div>
             </header>
 
-            <main className="flex-grow">
-                <section className="bg-gradient-to-br from-gray-600 via-yellow-800 to-black py-20 text-white">
+            <main className="flex-grow" >
+                <section className="bg-gradient-to-br from-gray-600 via-yellow-800 to-black py-20 text-white" id="products">
                     <div className="container mx-auto px-4 text-center">
                         <h2 className="text-4xl font-extrabold mb-4">Empower Your Quantitative Trading</h2>
                         <p className="text-xl mb-8">
-                            High-performance libraries and frameworks for quant traders, funds, and low latency application developers
+                            High-performance libraries and frameworks for quant traders, funds, and low latency
+                            application developers
                         </p>
                         <Button size="lg" variant="secondary">
-                            Get Started <ArrowRight className="ml-2" />
+                            Get Started <ArrowRight className="ml-2"/>
                         </Button>
                     </div>
                 </section>
@@ -38,7 +40,7 @@ export default function HomePage() {
                         <h3 className="text-3xl font-bold text-center mb-12">Our Core Frameworks</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <FrameworkCard
-                                icon={<Cpu className="w-10 h-10 text-indigo-600" />}
+                                icon={<Cpu className="w-10 h-10 text-indigo-600"/>}
                                 title="dxcore"
                                 description="Core library with CUDA code, OpenMP/I and high frequency trading market making, signal, risk and portfolio strategies, in C++."
                                 codeSnippet={`
@@ -55,7 +57,8 @@ __global__ void highFrequencyStrategy(MarketData* data) {
                 `}
                             />
                             <FrameworkCard
-                                icon={<Database className="w-10 h-10 text-purple-600" />}
+                                icon={<Database className="w-10 h-10 text-purple-600"/>}
+                                link="/dxlib"
                                 title="dxlib"
                                 description="High-level functionalities, interface for Python for dxcore with methods for manipulating data, networking, storage, caching and ML."
                                 codeSnippet={`
@@ -74,7 +77,7 @@ predictions = model.predict(new_data)
                 `}
                             />
                             <FrameworkCard
-                                icon={<Cpu className="w-10 h-10 text-pink-600" />}
+                                icon={<Cpu className="w-10 h-10 text-pink-600"/>}
                                 title="dxstudio"
                                 description="Native app for studying contracts, analyzing investment opportunities and strategies with API interfaces for calling studio GUI methods from other applications."
                                 codeSnippet={`
@@ -102,11 +105,12 @@ studio.display_results(results)
                     </div>
                 </section>
 
-                <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+                <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
+                         id="docs">
                     <div className="container mx-auto px-4 text-center">
                         <h3 className="text-3xl font-bold mb-8">Ready to Elevate Your Trading?</h3>
                         <Button size="lg" variant="secondary">
-                            See the Get Started <ArrowRight className="ml-2" />
+                            See the Get Started <ArrowRight className="ml-2"/>
                         </Button>
                     </div>
                 </section>
@@ -126,9 +130,10 @@ interface FrameworkCardProps {
     title: string;          // Title is a string
     description: string;    // Description is a string
     codeSnippet: string;    // Code snippet is a string
+    link?: string;          // Link is an optional string
 }
 
-function FrameworkCard({ icon, title, description, codeSnippet }: FrameworkCardProps) {
+function FrameworkCard({icon, title, description, codeSnippet, link}: FrameworkCardProps) {
     return (
         <Card className="overflow-hidden">
             <CardHeader>
@@ -142,6 +147,17 @@ function FrameworkCard({ icon, title, description, codeSnippet }: FrameworkCardP
             <code>{codeSnippet}</code>
           </pre>
                 </div>
+                {link && (
+                    <div className="mt-4">
+                        <a
+                            href={link}
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:text-blue-700 underline"
+                        >
+                            Learn More
+                        </a>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );
