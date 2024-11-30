@@ -5,7 +5,7 @@ on:
   push:
     branches: ["main"]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows manual running
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8 # specify the pnpm version you'd like to use
+          version: 9
 
       - name: Restore cache
         uses: actions/cache@v4
