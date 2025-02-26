@@ -53,6 +53,15 @@ class MenuIcon {
             </li>
             <li className="w-full md:w-fit">
                 <Link
+                    href={"/blog"}
+                    className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
+                    onClick={() => this.select(callback)}
+                >
+                    Blog
+                </Link>
+            </li>
+            <li className="w-full md:w-fit">
+                <Link
                     href={"/about"}
                     className="block w-full text-center text-white px-4 py-2 rounded hover:text-black hover:bg-white border border-gray-400"
                     onClick={() => this.select(callback)}
